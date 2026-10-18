@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>医疗空气处理机组 · 详细构造 3D 示意（内部预览版）</title>
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #e8edf2; font-family: "Microsoft YaHei", sans-serif; }
+      #app { width: 100vw; height: 100vh; }
+      .bar {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+        padding: 8px 12px; background: rgba(255,255,255,.92); border-bottom: 1px solid #d5dce4;
+        backdrop-filter: blur(6px);
+      }
+      .bar img { height: 26px; }
+      .bar .t { font-size: 13px; color: #475569; font-weight: 600; }
+      .bar .tag { font-size: 10px; background: #fef3c7; color: #92400e; border-radius: 99px; padding: 2px 8px; font-weight: 700; }
+      .bar .sp { flex: 1; }
+      .btn {
+        border: 1px solid #cbd5e1; background: #fff; color: #475569;
+        border-radius: 8px; padding: 5px 10px; font-size: 12px; cursor: pointer;
+      }
+      .btn.on { background: #1d6fb8; border-color: #1d6fb8; color: #fff; }
+      .legend {
+        position: fixed; left: 10px; bottom: 10px; z-index: 10;
+        background: rgba(255,255,255,.92); border: 1px solid #d5dce4; border-radius: 12px;
+        padding: 8px 12px; font-size: 11px; color: #475569; line-height: 1.9;
+      }
+      .ln { display: inline-block; width: 22px; border-top: 2px dashed; vertical-align: middle; margin-right: 6px; }
+      .specs {
+        position: fixed; right: 10px; top: 56px; z-index: 10;
+        background: rgba(255,255,255,.92); border: 1px solid #d5dce4; border-radius: 12px;
+        padding: 10px 14px; font-size: 12px; color: #334155; line-height: 2;
+      }
+      .specs b { color: #1d6fb8; }
+      .hint {
+        position: fixed; right: 10px; bottom: 10px; z-index: 10;
+        background: rgba(30,41,59,.8); color: #fff; font-size: 11px;
+        border-radius: 8px; padding: 5px 10px;
+      }
+      /* 密码门禁 */
+      #gate {
+        position: fixed; inset: 0; z-index: 100;
+        background: linear-gradient(160deg, #0f2540, #1d6fb8);
+        display: flex; align-items: center; justify-content: center;
+      }
+      #gate .card {
+        background: #fff; border-radius: 16px; padding: 32px 36px; width: 300px;
+        box-shadow: 0 20px 60px rgba(0,0,0,.35); text-align: center;
+      }
+      #gate img { height: 34px; margin-bottom: 10px; }
+      #gate h2 { margin: 0 0 4px; font-size: 17px; color: #1e293b; }
+      #gate p { margin: 0 0 18px; font-size: 12px; color: #64748b; }
+      #gate input {
+        width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 10px 12px;
+        border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none;
+      }
+      #gate input:focus { border-color: #1d6fb8; }
+      #gate button {
+        width: 100%; padding: 10px; border: 0; border-radius: 8px; cursor: pointer;
+        background: #1d6fb8; color: #fff; font-size: 14px; font-weight: 700;
+      }
+      #gate .err { color: #dc2626; font-size: 12px; height: 16px; margin-top: 8px; }
+    </style>
+    <script type="module" crossorigin src="./assets/index-CbHnceSf.js"></script>
+  </head>
+  <body>
+    <div id="gate">
+      <div class="card">
+        <img src="logo.png" alt="logo" />
+        <h2>医疗空气处理机组 · 构造演示</h2>
+        <p>内部设计资料，请输入账号密码查看</p>
+        <input id="gUser" placeholder="账号" autocomplete="off" />
+        <input id="gPass" type="password" placeholder="密码" />
+        <button id="gBtn">进入演示</button>
+        <div class="err" id="gErr"></div>
+      </div>
+    </div>
+    <div class="bar">
+      <img src="logo.png" alt="logo" />
+      <span class="t">医疗空气处理机组 · 百级净化恒温恒湿 · 详细构造示意</span>
+      <span class="tag">内部资料 · 请勿外传</span>
+      <span class="sp"></span>
+      <button class="btn on" id="bFlow">气流动画</button>
+      <button class="btn on" id="bLabel">部件标签</button>
+      <button class="btn on" id="bEq">设备开盖</button>
+      <button class="btn" id="bMaint">维护门·滤材</button>
+      <button class="btn" id="bRot">自动旋转</button>
+      <button class="btn" id="bReset">复位视角</button>
+    </div>
+    <div class="specs">
+      <b>技术参数</b><br/>
+      风量 <b>6000 m³/h</b><br/>
+      制冷 <b>5 kW</b> ｜ 电加热 <b>3 kW</b><br/>
+      电极加湿 <b>1 kW</b> ｜ 送风机 <b>2.2 kW</b><br/>
+      正面宽 <b>1100</b> × 深 <b>800</b> ｜ 高 <b>1970</b>（含轮）
+    </div>
+    <div class="legend">
+      <div><span class="ln" style="border-color:#2563eb"></span>送风（蒸发→加热→加湿→过滤→灭菌→风机→后部出风口）</div>
+      <div><span class="ln" style="border-color:#059669"></span>回风（后部回风口·电磁对接 → 回风道下行 → 底部入混合腔）</div>
+      <div><span class="ln" style="border-color:#d97706"></span>新风（新风阀按比例补入）</div>
+      <div><span class="ln" style="border-color:#64748b"></span>冷凝器散热排风</div>
+    </div>
+    <div class="hint">拖动旋转 · 滚轮/双指缩放</div>
+    <div id="app"></div>
+    <script>
+      (function () {
+        var gate = document.getElementById("gate");
+        if (sessionStorage.getItem("dsp-auth") === "1") { gate.style.display = "none"; return; }
+        function tryLogin() {
+          var u = document.getElementById("gUser").value.trim();
+          var p = document.getElementById("gPass").value.trim();
+          if (u === "dsp123" && p === "dsp888") {
+            sessionStorage.setItem("dsp-auth", "1");
+            gate.style.display = "none";
+          } else {
+            document.getElementById("gErr").textContent = "账号或密码不正确";
+          }
+        }
+        document.getElementById("gBtn").onclick = tryLogin;
+        document.getElementById("gPass").addEventListener("keydown", function (e) {
+          if (e.key === "Enter") tryLogin();
+        });
+      })();
+    </script>
+  </body>
+</html>
